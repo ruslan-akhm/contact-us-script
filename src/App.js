@@ -220,6 +220,11 @@ function App() {
 				</Grid>
 			</Grid>
 			{/* <EditModal edit={edit} close={() => setEdit({state: false, item_id: null})} paInfo={paInfo}/> */}
+			<Typography
+				sx={{ margin: "16px 20px 0 auto", fontSize: "10px", color: "lightgray" }}
+			>
+				by Ruslan. Ver. 1.0.0
+			</Typography>
 		</Grid>
 	);
 }
