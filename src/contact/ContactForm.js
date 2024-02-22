@@ -1,6 +1,6 @@
-import { Grid, TextField, Typography } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 
-function Form({ paInfo, setPaInfo }) {
+function ContactForm({ paInfo, setPaInfo }) {
 	const handleInput = (e, type, lang) => {
 		setPaInfo((prevState) => {
 			return {
@@ -62,4 +62,4 @@ function Form({ paInfo, setPaInfo }) {
 	);
 }
 
-export default Form;
+export default ContactForm;

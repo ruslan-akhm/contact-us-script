@@ -1,4 +1,4 @@
-export const details = {
+export const contactDetails = {
 	id: {
 		label: {
 			en: "ID",
@@ -82,5 +82,31 @@ export const details = {
 			fr: "Schedule (hours) - French",
 		},
 		value: { en: "", fr: "" },
+	},
+};
+
+export const banner = {
+	pa_id: {
+		label: {
+			en: "Program Area ID (optional)",
+			fr: "Website Title - French",
+		},
+		value: { en: "", fr: "" },
+	},
+	alert: {
+		label: {
+			en: "Alert - English",
+			fr: "Alert - French",
+		},
+		title: { en: "", fr: "" },
+		body: { en: "", fr: "" },
+	},
+	banner: {
+		label: {
+			en: "Banner - English",
+			fr: "Banner - French",
+		},
+		title: { en: "", fr: "" },
+		body: { en: "", fr: "" },
 	},
 };
