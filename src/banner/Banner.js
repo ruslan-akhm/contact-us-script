@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Button, Grid, IconButton, Typography } from "@mui/material";
+import {
+	Button,
+	Grid,
+	IconButton,
+	Typography,
+	RadioGroup,
+	Radio,
+	FormControlLabel,
+} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -14,6 +22,7 @@ function Banner() {
 	const [bannersInfo, setBannersInfo] = useState(banner);
 	const [list, setList] = useState("");
 	const [isCopied, setIsCopied] = useState(false);
+	const [option, setOption] = useState("all");
 
 	useEffect(() => {
 		if (isCopied) {
@@ -22,6 +31,10 @@ function Banner() {
 			}, 2000);
 		}
 	}, [isCopied]);
+
+	const handleRadioChange = (e) => {
+		setOption(e.target.value);
+	};
 
 	const generateCode = () => {
 		const template = Handlebars.compile(
@@ -75,6 +88,96 @@ if (app_client_id && app_client_id == "{{pa_id.value.en}}") {
 		setBannersInfo({ ...banner });
 	};
 
+	const generateENCode = () => {
+		const template = Handlebars.compile(
+			`~~~js 
+            {{#if pa_id.value.en}} 
+if (app_client_id && app_client_id == "{{pa_id.value.en}}") { 
+            {{/if}}
+			if(config.language === "en"){
+                /* Blue banner */
+                const bannerTitle = "{{banner.title.en}}";
+                const bannerBody = "{{banner.body.en}}";
+                {{#if banner.title.en}}document.getElementById("banner-text-bold").innerText = bannerTitle; {{/if}}
+                {{#if banner.body.en}}document.getElementById("banner-text").innerText = bannerBody; {{/if}}
+                {{#if banner.title.en}}document.getElementById("banner").style.display = "block";
+                {{else if banner.body.en}}document.getElementById("banner").style.display = "block";
+                {{/if}}
+
+                /* Yellow alert */
+                const alertTitle = "{{alert.title.en}}";
+                const alertBody = "{{alert.body.en}}";
+                {{#if alert.title.en}}document.getElementById("alert-text-bold").innerText = alertTitle; {{/if}}
+                {{#if alert.body.en}}document.getElementById("alert-text").innerText = alertBody; {{/if}}
+                {{#if alert.title.en}}document.getElementById("alert").style.display = "block";
+                {{else if alert.body.en}}document.getElementById("alert").style.display = "block";
+                {{/if}}
+} else {
+	document.getElementById("banner").style.display = "none"
+	document.getElementById("alert").style.display = "none";
+}
+            {{#if pa_id.value.en}} 
+} 
+            {{/if}}
+      `
+		);
+		const variables = { ...bannersInfo };
+		const renderedMarkdown = template(variables);
+		setList([
+			...list,
+			{
+				id: list.length === 0 ? 1 : list[list.length - 1].id + 1,
+				code: renderedMarkdown,
+			},
+		]);
+		setBannersInfo({ ...banner });
+	};
+
+	const generateFRCode = () => {
+		const template = Handlebars.compile(
+			`~~~js 
+            {{#if pa_id.value.en}} 
+if (app_client_id && app_client_id == "{{pa_id.value.en}}") { 
+            {{/if}}
+			if(config.language === "fr"){
+                /* Blue banner */
+                const bannerTitle = "{{banner.title.fr}}";
+                const bannerBody = "{{banner.body.fr}}";
+                {{#if banner.title.fr}}document.getElementById("banner-text-bold").innerText = bannerTitle; {{/if}}
+                {{#if banner.body.fr}}document.getElementById("banner-text").innerText = bannerBody; {{/if}}
+                {{#if banner.title.fr}}document.getElementById("banner").style.display = "block";
+                {{else if banner.body.fr}}document.getElementById("banner").style.display = "block";
+                {{/if}}
+
+                /* Yellow alert */
+                const alertTitle = "{{alert.title.fr}}";
+                const alertBody = "{{alert.body.fr}}";
+                {{#if alert.title.fr}}document.getElementById("alert-text-bold").innerText = alertTitle; {{/if}}
+                {{#if alert.body.fr}}document.getElementById("alert-text").innerText = alertBody; {{/if}}
+                {{#if alert.title.fr}}document.getElementById("alert").style.display = "block";
+                {{else if alert.body.fr}}document.getElementById("alert").style.display = "block";
+                {{/if}}
+} else {
+	document.getElementById("banner").style.display = "none"
+	document.getElementById("alert").style.display = "none";
+}
+            {{#if pa_id.value.en}} 
+} 
+            {{/if}}
+      `
+		);
+		const variables = { ...bannersInfo };
+		const renderedMarkdown = template(variables);
+		setList([
+			...list,
+			{
+				id: list.length === 0 ? 1 : list[list.length - 1].id + 1,
+				code: renderedMarkdown,
+			},
+		]);
+		setBannersInfo({ ...banner });
+	};
+
 	const copyAll = () => {
 		if (list.length === 0) return;
 		const codeBlocks = document.getElementById("code-blocks").children;
@@ -110,18 +213,42 @@ if (app_client_id && app_client_id == "{{pa_id.value.en}}") {
 					<Typography variant="subtitle1" sx={{ fontStyle: "italic" }}>
 						Program Area ID is optional. Use it to generate PA specific message.
 					</Typography>
-					<Typography variant="subtitle1" sx={{ fontStyle: "italic" }}>
-						If French is not provided, an English variant will be shown on French
-						page.
-					</Typography>
+
 					<Typography variant="subtitle1" sx={{ fontStyle: "italic" }}>
 						In case only one is needed, just the Title or just the Body are acceptable
 						as standalone message.
 					</Typography>
 				</ul>
-				<BannerForm bannersInfo={bannersInfo} setBannersInfo={setBannersInfo} />
+				<RadioGroup
+					value={option}
+					onChange={handleRadioChange}
+					sx={{
+						display: "flex",
+						flexDirection: "row",
+						my: 2,
+					}}
+				>
+					<FormControlLabel
+						value="all"
+						control={<Radio />}
+						label="English and French"
+					/>
+					<FormControlLabel value="en" control={<Radio />} label="English Only" />
+					<FormControlLabel value="fr" control={<Radio />} label="French Only" />
+				</RadioGroup>
+				<BannerForm
+					bannersInfo={bannersInfo}
+					setBannersInfo={setBannersInfo}
+					option={option}
+				/>
 				<Button
-					onClick={generateCode}
+					onClick={
+						option === "all"
+							? generateCode
+							: option === "en"
+							? generateENCode
+							: generateFRCode
+					}
 					variant="contained"
 					sx={{ m: "20px auto 40px", background: "#333" }}
 				>
