@@ -119,7 +119,7 @@ function JsonGen(props) {
 				const hoursRegex =
 					/document\.querySelector\("#contact-schedule-hours"\)\.innerText\s*=\s*([\s\S]*?)(?=document\.querySelector|$)/;
 				hours = checkRegex(pa, hoursRegex);
-
+				if (!client_id[1] || !client_id[1].length) continue;
 				paObj = {
 					[client_id[1]]: {
 						name: {
